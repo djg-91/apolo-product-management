@@ -1,3 +1,5 @@
+from collections import defaultdict
+from typing import Union, Tuple
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,6 +9,42 @@ from .serializers import OrderSerializer, ErrorSerializer
 from drf_spectacular.utils import extend_schema
 
 PRODUCT_API_BASE = 'http://127.0.0.1:8000/api/products/'
+
+
+def validate_and_group_items(items: list[dict[str, int]]) -> Union[Tuple[dict[int, int], None], Tuple[None, str]]:
+    """
+    Validates each item in an order and groups products by their IDs, summing their quantities.
+
+    Args:
+        items (list[dict[str, int]]): A list of items, where each item is a dictionary containing
+                                      'product_id' and 'quantity'.
+
+    Returns:
+        Union[Tuple[dict[int, int], None], Tuple[None, str]]: A tuple containing:
+            - A dictionary with product IDs as keys and their total quantities as values.
+            - An error message if validation fails, otherwise None.
+    """
+    grouped_items = defaultdict(int)
+
+    for item in items:
+        product_id = item.get('product_id')
+        quantity = item.get('quantity')
+
+        if product_id is None or quantity is None:
+            return None, "Each item must contain 'product_id' and 'quantity'."
+
+        try:
+            product_id = int(product_id)
+            quantity = int(quantity)
+        except (TypeError, ValueError):
+            return None, "'product_id' and 'quantity' must be valid integers."
+
+        if product_id < 0 or quantity < 0:
+            return None, "'product_id' and 'quantity' must be non-negative."
+
+        grouped_items[product_id] += quantity
+
+    return dict(grouped_items), None
 
 class OrderListCreateView(APIView):
     @extend_schema(
@@ -48,16 +86,14 @@ class OrderListCreateView(APIView):
         if not items:
             return Response({'error': 'No items provided'}, status=status.HTTP_400_BAD_REQUEST)
 
+        items, error = validate_and_group_items(items)
+
+        if error:
+            return Response({'error': error}, status=status.HTTP_400_BAD_REQUEST)
+        
         order = Order.objects.create()
 
-        for item in items:
-            product_id = item.get('product_id')
-            quantity = item.get('quantity')
-
-            if not product_id or not quantity:
-                order.delete()
-                return Response({'error': 'Invalid item data'}, status=status.HTTP_400_BAD_REQUEST)
-
+        for product_id, quantity in items.items():
             product_response = requests.get(f'{PRODUCT_API_BASE}{product_id}/')
             if product_response.status_code != 200:
                 order.delete()
