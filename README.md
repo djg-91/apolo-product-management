@@ -69,7 +69,19 @@ Todas las instrucciones a continuación deben ejecutarse en un terminal de Windo
 
 ---
 
-## Endpoints
+## Endpoints: Swagger
+
+Cada API cuenta con su propia documentación interactiva generada con Swagger. Puedes acceder a esta documentación a través de las siguientes URLs:
+
+### **API 1: Product Manager**
+- **URL:** `/api/docs` (e.g. `127.0.0.1:8000/api/docs`)
+
+### **API 2: Order Manager**
+- **URL:** `/api/docs` (e.g. `127.0.0.1:8001/api/docs`)
+
+---
+
+## Endpoints: Descripción y ejemplos
 
 ### **API 1: Product Manager**
 #### 1. Obtener lista de productos
