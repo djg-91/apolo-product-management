@@ -1,0 +1,66 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+*.env
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+db.sqlite3
+*.sqlite3
+/media/
+staticfiles/
+static/
+
+# If using Django migrations
+**/migrations/*
+!**/migrations/__init__.py
+
+# Local settings
+settings_local.py
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Test and coverage
+.tox/
+.coverage
+*.coverage
+.cache
+.nox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Deployment files
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux files
+*.~lock.*
