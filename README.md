@@ -8,15 +8,21 @@ Este proyecto consiste en dos APIs RESTful desarrolladas con Django REST Framewo
 
 1. **API 1: Product Manager**
    - Gestiona productos con endpoints para:
-     - Listar productos.
      - Crear un nuevo producto.
+     - Listar los productos disponibles.
+     - Traer la información detalla de un producto.
+     - Eliminar un producto.
      - Actualizar el stock de un producto.
 
 2. **API 2: Order Manager**
    - Gestiona órdenes e interactúa con la API 1 para:
      - Validar la disponibilidad de productos.
      - Reducir el stock cuando se realiza un pedido.
-     - Proporcionar detalles de las ordenes, incluyendo el precio total de cada una.
+   - Cuenta con endpoints para:
+     - Crear una orden nueva.
+     - Listar las ordenes disponibles, incluyendo el precio total de cada una y el detalle de sus productos.
+     - Traer la información detalla de una orden.
+     - Eliminar una orden.
 
 ---
 
@@ -84,7 +90,29 @@ Cada API cuenta con su propia documentación interactiva generada con Swagger. P
 ## Endpoints: Descripción y ejemplos
 
 ### **API 1: Product Manager**
-#### 1. Obtener lista de productos
+#### 1. Crear un nuevo producto
+- **Método**: `POST`
+- **URL**: `/api/products/`
+- **Descripción**: Crea un nuevo producto con los datos proporcionados.
+- **Cuerpo de la solicitud**:
+  ```json
+  {
+    "name": "Producto C",
+    "price": 12.99,
+    "stock": 20
+  }
+  ```
+- **Respuesta (201)**:
+  ```json
+  {
+    "id": 3,
+    "name": "Producto C",
+    "price": 12.99,
+    "stock": 20
+  }
+  ```
+  
+#### 2. Obtener lista de productos
 - **Método**: `GET`
 - **URL**: `/api/products/`
 - **Descripción**: Devuelve una lista de todos los productos.
@@ -106,7 +134,7 @@ Cada API cuenta con su propia documentación interactiva generada con Swagger. P
   ]
   ```
 
-#### 2. Obtener detalles de un producto
+#### 3. Obtener detalles de un producto
 - **Método**: `GET`
 - **URL**: `/api/products/{id}/`
 - **Descripción**: Devuelve los detalles de un producto específico.
@@ -120,29 +148,13 @@ Cada API cuenta con su propia documentación interactiva generada con Swagger. P
   }
   ```
 
-#### 3. Crear un nuevo producto
-- **Método**: `POST`
-- **URL**: `/api/products/`
-- **Descripción**: Crea un nuevo producto con los datos proporcionados.
-- **Cuerpo de la solicitud**:
-  ```json
-  {
-    "name": "Producto C",
-    "price": 12.99,
-    "stock": 20
-  }
-  ```
-- **Respuesta (201)**:
-  ```json
-  {
-    "id": 3,
-    "name": "Producto C",
-    "price": 12.99,
-    "stock": 20
-  }
-  ```
+#### 4. Eliminar un producto
+- **Método**: `DELETE`
+- **URL**: `/api/products/{id}/`
+- **Descripción**: Elimina un producto específico por su ID.
+- **Respuesta (204)**: Sin contenido.
 
-#### 4. Actualizar el stock de un producto
+#### 5. Actualizar el stock de un producto
 - **Método**: `PATCH`
 - **URL**: `/api/products/{id}/stock/`
 - **Descripción**: Actualiza el stock de un producto por su ID.
@@ -188,7 +200,6 @@ Cada API cuenta con su propia documentación interactiva generada con Swagger. P
   }
   ```
 
-
 #### 2. Obtener lista de ordenes
 - **Método**: `GET`
 - **URL**: `/api/orders/`
@@ -216,4 +227,26 @@ Cada API cuenta con su propia documentación interactiva generada con Swagger. P
   }
   ]
   ```
----
+
+#### 3. Obtener detalles de una orden
+- **Método**: `GET`
+- **URL**: `/api/orders/{id}/`
+- **Descripción**: Devuelve los detalles de una orden específica por su ID.
+- **Respuesta (200)**:
+  ```json
+  {
+    "id": 1,
+    "created_at": "2025-02-04T09:49:24.294928Z",
+    "products": [
+      {"id": 1, "name": "Producto A", "quantity": 2, "price": 10.99},
+      {"id": 2, "name": "Producto B", "quantity": 1, "price": 15.49}
+    ],
+    "total_price": 37.47
+  }
+  ```
+
+#### 4. Eliminar una orden
+- **Método**: `DELETE`
+- **URL**: `/api/orders/{id}/`
+- **Descripción**: Elimina una orden específica por su ID.
+- **Respuesta (204)**: Sin contenido.
