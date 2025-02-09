@@ -1,55 +1,82 @@
 # RESTful APIs: Apolo Product Management
 
-Este proyecto consiste en dos APIs RESTful desarrolladas con Django REST Framework. Las APIs interactúan entre sí para gestionar productos y órdenes.
+Este proyecto consiste en dos APIs RESTful desarrolladas con Django REST Framework para gestionar productos y órdenes. Las APIs interactúan entre sí para proporcionar una solución completa de gestión de inventario y pedidos.
 
----
+## Características principales
+
+- **API 1: Product Manager**
+  - Gestión completa de productos (CRUD)
+  - Actualización de stock
+
+- **API 2: Order Manager**
+  - Creación y gestión de órdenes
+  - Validación de disponibilidad de productos
+  - Actualización automática de stock al realizar pedidos
 
 ## Estructura del Proyecto
 
-1. **API 1: Product Manager**
-   - Gestiona productos con endpoints para:
-     - Crear un nuevo producto.
-     - Listar los productos disponibles.
-     - Traer la información detalla de un producto.
-     - Eliminar un producto.
-     - Actualizar el stock de un producto.
+### API 1: Product Manager
 
-2. **API 2: Order Manager**
-   - Gestiona órdenes e interactúa con la API 1 para:
-     - Validar la disponibilidad de productos.
-     - Reducir el stock cuando se realiza un pedido.
-   - Cuenta con endpoints para:
-     - Crear una orden nueva.
-     - Listar las ordenes disponibles, incluyendo el precio total de cada una y el detalle de sus productos.
-     - Traer la información detalla de una orden.
-     - Eliminar una orden.
+Endpoints:
+- Crear un nuevo producto
+- Listar productos disponibles
+- Obtener información detallada de un producto
+- Eliminar un producto
+- Actualizar el stock de un producto
 
----
+### API 2: Order Manager
+
+Endpoints:
+- Crear una nueva orden
+- Listar órdenes disponibles (incluye precio total y detalle de productos)
+- Obtener información detallada de una orden
+- Eliminar una orden
 
 ## Instalación y Configuración
 
-### Pasos para Configurar el Proyecto
+### Opción 1: Usando Docker (Recomendado)
 
-Todas las instrucciones a continuación deben ejecutarse en un terminal de Windows.
+#### Requisitos previos
+- Docker
+- Docker Compose
 
-1. **Clona el repositorio**
+#### Pasos
+1. Clonar el repositorio:
    ```bat
    git clone https://github.com/djg-91/apolo-product-management
    cd apolo-product-management
    ```
 
-2. **Crea un entorno virtual (opcional)**
+2. Construir y ejecutar los contenedores
+   ```bash
+   docker-compose up --build
+   ```
+
+### Opción 2: Ejecución manual
+
+#### Requisitos previos
+- Python 3.13
+- Terminal de Windows
+
+#### Pasos
+1. Clonar el repositorio:
+   ```bat
+   git clone https://github.com/djg-91/apolo-product-management
+   cd apolo-product-management
+   ```
+
+2. Crear y activar un entorno virtual (opcional pero recomendado):
    ```bat
    python -m venv ..\apolo-product-management_env
    ..\apolo-product-management_env\Scripts\activate
    ```
 
-3. **Instala las dependencias**
+3. Instalar dependencias:
    ```bat
    pip install -r requirements.txt
    ```
 
-4. **Ejecuta las migraciones**
+4. Ejecutar migraciones:
    ```bat
    python .\product_manager\manage.py makemigrations
    python .\product_manager\manage.py migrate
@@ -57,21 +84,33 @@ Todas las instrucciones a continuación deben ejecutarse en un terminal de Windo
    python .\order_manager\manage.py migrate
    ```
 
-5. **Ejecuta las APIs**
-   1. Para ejecutar ambas APIs al mismo tiempo (recomendado para garantizar la comunicación entre ellas):
-      ```bat
-      .\run.bat
-      ```
+5. Ejecutar las APIs:
+- Ambas APIs simultáneamente (recomendado):
+  ```
+  .\run.bat
+  ```
+- Solo Product Manager:
+  ```
+  python .\product_manager\manage.py runserver
+  ```
+- Solo Order Manager:
+  ```
+  python .\order_manager\manage.py runserver
+  ```
 
-   2. Para ejecutar solo la API Product Manager:
-      ```bat
-      python .\product_manager\manage.py runserver
-      ```
-   
-   3. Para ejecutar solo la API Order Manager:
-      ```bat
-      python .\order_manager\manage.py runserver
-      ```
+## Documentación de la API
+
+Cada API cuenta con documentación interactiva generada con Swagger:
+
+- **API 1: Product Manager**: `http://127.0.0.1:8000/api/docs`
+- **API 2: Order Manager**: `http://127.0.0.1:8001/api/docs`
+
+## Ejemplos de uso
+
+### API 1: Product Manager
+
+#### Crear un nuevo producto
+
 
 ---
 
