@@ -1,8 +1,9 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import URLPattern, path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-urlpatterns = [
+
+urlpatterns: list[URLPattern] = [
     path('admin/', admin.site.urls),
     path('api/products/', include('products.urls')),
 
