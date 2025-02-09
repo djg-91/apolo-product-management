@@ -49,9 +49,12 @@ def validate_and_group_items(items: list[dict[str, int]]) -> Union[Tuple[dict[in
 
 
 class OrderListCreateView(APIView):
+    """
+    Handles listing all orders and creating new orders.
+    """
     @extend_schema(
-        summary='Retrieve all orders',
-        description='Fetches a list of all existing orders with their details.',
+        summary='List all orders',
+        description='Returns a list of all available orders with their details.',
         tags=['Orders'],
         responses={200: OrderSerializer(many=True)},
     )
@@ -98,7 +101,7 @@ class OrderListCreateView(APIView):
             request (Request): The Request object containing the order data.
 
         Returns:
-            Response: A Response object containing the serialized order created or indicating failure.
+            Response: A Response object containing the serialized order created or validation errors.
         """
         items: Optional[list[dict[str, int]]] = request.data.get('items', [])
         if not items:
@@ -150,3 +153,64 @@ class OrderListCreateView(APIView):
 
         serializer: OrderSerializer = OrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+class OrderDetailDeleteView(APIView):
+    """
+    Handles retrieving and deleting a specific order by its ID.
+    """
+    @extend_schema(
+        summary='Get order details',
+        description='Returns detailed information about an order identified by its ID.',
+        tags=['Orders'],
+        responses={
+            200: OrderSerializer,
+            404: ErrorSerializer,
+        },
+    )
+    def get(self, request: Request, pk: int) -> Response:
+        """
+        Retrieves the details of a specific order by its primary key (ID).
+
+        Args:
+            pk (int): The primary key of the order.
+
+        Returns:
+            Response: A Response object containing the serialized order or an error message if the order does not exist.
+        """
+        try:
+            product: Order = Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer: OrderSerializer = OrderSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    @extend_schema(
+        summary='Delete an order',
+        description='Deletes an order identified by its ID.',
+        tags=['Orders'],
+        responses={
+            204: None,
+            404: ErrorSerializer,
+        },
+    )
+    def delete(self, request: Request, pk: int) -> Response:
+        """
+        Deletes a specific order by its primary key (ID).
+
+        Args:
+            pk (int): The primary key of the order.
+
+        Returns:
+            Response: A Response object with status 204 if the order was deleted successfully, or an error message if the order does not exist.
+        """
+        try:
+            order: Order = Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            return Response({'error': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        order.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
